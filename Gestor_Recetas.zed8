@@ -1,0 +1,95 @@
+
+
+Autor: Omar S. Gómez
+Fecha: mayo 2020
+Descripción: En esta especificación modelamos el comportamiento de un producto 
+software (App) responsable de gestionar recetas de cocina
+
+─ [ USUARIO,RECETA ] └
+
+┌ RecetasApp
+  usuario: ℙ USUARIO
+  recetas: ℙ RECETA
+  recetasusr: RECETA ⇸  USUARIO
+| 
+  recetas = dom recetasusr
+└
+
+┌ InicializarRecetaApp
+  RecetasApp
+| 
+  usuario = ∅
+  recetas = ∅
+  recetasusr = ∅
+└
+
+┌ AñadirUsuario
+  ΔRecetasApp
+  usr?: USUARIO
+| 
+  usr? ∉ USUARIO
+  usuario′ = usuario ∪ {usr?}
+└
+
+┌ AñadirReceta
+  ΔRecetasApp
+  u?: USUARIO
+  r?: RECETA
+|
+  u? ∈ USUARIO
+  recetasusr′ = recetasusr ∪ {r? ↦  u?}
+└
+
+┌ ModificarReceta
+  ΔRecetasApp
+  u?: USUARIO
+  r?: RECETA
+|
+  u? ∈ USUARIO
+  recetasusr′ = recetasusr ⊕ {r? ↦  u?}
+└
+
+┌ BorrarReceta
+  ΔRecetasApp
+  u?: USUARIO
+  r?: RECETA
+|
+  u? ∈ USUARIO
+  r? ∈ RECETA
+  recetasusr′ = {r?} ⩤ recetasusr
+└
+
+┌ DevolverRecetasDadoUnUsuario
+  ΞRecetasApp
+  u?:  USUARIO
+  r!: ℙ RECETA
+|
+  u? ∈ USUARIO
+  r! = {n : recetas | recetasusr(n) = u?}
+└
+
+┌ ComprobarDevolverRecetasDadoUnUsuario
+  ΞRecetasApp
+   u?:  USUARIO
+   r!: ℙ RECETA
+   n: RECETA
+|
+  ΞRecetasApp ∧ u? ∈ USUARIO ∧ r! ∈ ℙ RECETA 
+  ∧ u? ∈ USUARIO ∧ n ∈ recetas ⇒ n ∈ dom recetasusr
+└
+
+
+
+
+┌ AñadirRecetaFSBSig 
+ InicializarRecetaApp 
+ r?: RECETA 
+ u?: USUARIO |
+ true └ 
+
+┌ AñadirUsuarioFSBSig 
+ InicializarRecetaApp 
+ usr?: USUARIO |
+ true └ 
+ 
+ 
